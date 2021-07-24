@@ -14,9 +14,9 @@ Assuming you already have Docker and Docker Compose installed:
 1. Run `docker-compose up` to start the application, OpenTelemetry Collector,
    Zipkin and Jaeger.
 2. Run migration on another terminal with:
-  ```
-  docker exec -it demo_phoenix_1 /bin/ash ./bin/demo eval 'Demo.Release.migrate()'
-  ```
+    ```
+    docker exec -it demo_phoenix_1 /bin/ash ./bin/demo eval 'Demo.Release.migrate()'
+    ```
 3. Browse to http://localhost:4000 and play around with
    http://localhost:4000/posts.
 4. Visit Zipkin at http://localhost:9411 and hit `Run Query` to look the the sample trace.
