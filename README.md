@@ -7,7 +7,13 @@ Here, we are using `opentelemetry_exporter` to export the traces to [
 OpenTelemetry Collector][0]. The collector in turn export the traces to [Zipkin][1] and [
 Jaeger][2] respectively.
 
+Additionally, we also include the OpenTelemetry Collector configuration to
+export the traces to services like [Honeycomb](https://www.honeycomb.io/) and [Lightstep](https://lightstep.com/).
+
 ## Getting Stated
+
+By default, we only configure our OpenTelemetry collector to export traces to
+the local Zipkin and Jaeger.
 
 Assuming you already have Docker and Docker Compose installed:
 
@@ -24,6 +30,47 @@ Assuming you already have Docker and Docker Compose installed:
 look at the sample trace.
 6. Run `docker-compose down` to destroy the created resources.
 
+## Exporting to other services
+
+In general, as long as the services support ingesting data from OTLP protocol,
+we should be able to export the data to the services by specifying the endpoint
+of the service with an acesss/api key.
+
+For example, at the time of writing, NewRelic support for OTLP ingest is in
+pre-release. And here's the documentation for exporting the data you have to
+NewRelic:
+
+- [Export your telemetry data to
+  NewRelic](https://docs.newrelic.com/docs/integrations/open-source-telemetry-integrations/opentelemetry/opentelemetry-quick-start/#export)
+- [Export data to an OpenTelemetry
+  Collector](https://docs.newrelic.com/docs/integrations/open-source-telemetry-integrations/opentelemetry/opentelemetry-quick-start/#collector)
+So, search for the services documentation on whether they support OTLP protocol
+for their ingestion.
+
+Here, we also include example configuration to export your telemetry data
+to the following services:
+
+- Honeycomb
+- Lightstep
+
+Generally, there are two ways to export your telemetry data to these services:
+
+- Export directly to the OTLP ingestion endpoint of the service:
+  ```
+  opentelemetry_exporter -> Honeycomb/Lightstep OpenTelemetry endpoint
+  ```
+- Export to OpenTelemetry Collector first, which then export to the OTLP
+  ingestion endpoint of the service:
+  ```
+  opentelemetry_exporter -> OpenTelemetry Collector -> Honeycomb/Lightstep
+  OpenTelemetry endpoint
+  ```
+
+### Exporting to Honeycomb
+
+### Exporting to Lightstep
+
+
 ## Example Screenshot
 
 ### Zipkin
@@ -35,6 +82,10 @@ look at the sample trace.
 
 ![Jaeger Index](./images/jaeger_index.png)
 ![Jaeger Traces](./images/zipkin_traces.png)
+
+### Honeycomb
+
+### Lightstep
 
 
 [0]: https://github.com/open-telemetry/opentelemetry-collector/
