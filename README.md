@@ -36,6 +36,19 @@ In general, as long as the services support ingesting data from OTLP protocol,
 we should be able to export the data to the services by specifying the endpoint
 of the service with an acesss/api key.
 
+Generally, there are two ways to export your telemetry data to these services:
+
+- Export directly to the OTLP ingestion endpoint of the service:
+  ```
+  opentelemetry_exporter -> Service OpenTelemetry endpoint
+  ```
+- Export to OpenTelemetry Collector first, which then export to the OTLP
+  ingestion endpoint of the service:
+  ```
+  opentelemetry_exporter -> OpenTelemetry Collector -> Service
+  OpenTelemetry endpoint
+  ```
+
 For example, at the time of writing, NewRelic support for OTLP ingest is in
 pre-release. And here's the documentation for exporting the data you have to
 NewRelic:
@@ -44,31 +57,55 @@ NewRelic:
   NewRelic](https://docs.newrelic.com/docs/integrations/open-source-telemetry-integrations/opentelemetry/opentelemetry-quick-start/#export)
 - [Export data to an OpenTelemetry
   Collector](https://docs.newrelic.com/docs/integrations/open-source-telemetry-integrations/opentelemetry/opentelemetry-quick-start/#collector)
+
 So, search for the services documentation on whether they support OTLP protocol
 for their ingestion.
 
-Here, we also include example configuration to export your telemetry data
-to the following services:
+### Example
 
-- Honeycomb
-- Lightstep
+Here, we also include example configuration to export your telemetry data to Honeycomb and Lightstep.
 
-Generally, there are two ways to export your telemetry data to these services:
+#### Exporting to Honeycomb
 
-- Export directly to the OTLP ingestion endpoint of the service:
-  ```
-  opentelemetry_exporter -> Honeycomb/Lightstep OpenTelemetry endpoint
-  ```
-- Export to OpenTelemetry Collector first, which then export to the OTLP
-  ingestion endpoint of the service:
-  ```
-  opentelemetry_exporter -> OpenTelemetry Collector -> Honeycomb/Lightstep
-  OpenTelemetry endpoint
-  ```
+As documented in [here][3], we can configure our `opentelemetry_exporter` to
+export our telemetry data directly to the Honeycomb OpenTelemetry endpoint with
+the following configuration in `config/runtime.exs`:
 
-### Exporting to Honeycomb
+```
+config :opentelemetry, :processors,
+  otel_batch_processor: %{
+    exporter: {:opentelemetry_exporter, %{endpoints: [
+      {:http, 'api.honeycomb.io:', 443 , [
+        {"x-honeycomb-team", System.fetch_env!("HONEYCOMB_API_KEY")},
+        {"x-honeycomb-dataset", "<YOUR_DATASET_NAME>"}
+      ]}
+    ]}}
+  }
+```
 
-### Exporting to Lightstep
+Alternatively, if you are using OpenTelemtry Collector instead,
+as documented [here][4], you can configure your `otel-collector-config.yaml`
+with the following configuration:
+
+```yaml
+exporters:
+  otlp:
+    endpoint: "api.honeycomb.io:443"
+    headers:
+      "x-honeycomb-team": "YOUR_API_KEY"
+      "x-honeycomb-dataset": "YOUR_DATASET"
+
+# ...
+service:
+  extensions: [zpages]
+  pipelines:
+    traces:
+      receivers: [otlp]
+      processors: [batch]
+      exporters: [otlp]
+```
+
+#### Exporting to Lightstep
 
 
 ## Example Screenshot
@@ -91,4 +128,7 @@ Generally, there are two ways to export your telemetry data to these services:
 [0]: https://github.com/open-telemetry/opentelemetry-collector/
 [1]: https://zipkin.io/
 [2]: https://www.jaegertracing.io/
+[3]: https://docs.honeycomb.io/getting-data-in/opentelemetry/
+[4]: https://docs.honeycomb.io/getting-data-in/opentelemetry/otel-collector/
+
 
