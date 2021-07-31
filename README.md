@@ -71,11 +71,11 @@ As documented in [here][3], we can configure our `opentelemetry_exporter` to
 export our telemetry data directly to the Honeycomb OpenTelemetry endpoint with
 the following configuration in `config/runtime.exs`:
 
-```
+```elixir
 config :opentelemetry, :processors,
   otel_batch_processor: %{
     exporter: {:opentelemetry_exporter, %{endpoints: [
-      {:http, 'api.honeycomb.io:', 443 , [
+      {:http, 'api.honeycomb.io', 443 , [
         {"x-honeycomb-team", System.fetch_env!("HONEYCOMB_API_KEY")},
         {"x-honeycomb-dataset", "<YOUR_DATASET_NAME>"}
       ]}
@@ -94,7 +94,6 @@ exporters:
     headers:
       "x-honeycomb-team": "YOUR_API_KEY"
       "x-honeycomb-dataset": "YOUR_DATASET"
-
 # ...
 service:
   extensions: [zpages]
@@ -107,6 +106,29 @@ service:
 
 #### Exporting to Lightstep
 
+At the time of writing, Lightstep has no documentation on
+what are their OpenTelemetry ingestion endpoint. Hence unlike in Honeycomb,
+where we can export directly from `opentelemetry_exporter`, we have to export
+the data to Lightstep through OpenTelemetry collector.
+
+As documented [here][5], here's how you can configure your `otel-collector-config.yaml` to send your
+data to Lightstep from your OpenTelemetry Collector:
+
+```yaml
+exporters:
+  otlp:
+    endpoint: ingest.lightstep.com:443
+    headers:
+      "lightstep-access-token": "<YOUR_ACCESS_TOKEN>"
+# ...
+service:
+  extensions: [zpages]
+  pipelines:
+    traces:
+      receivers: [otlp]
+      processors: [batch]
+      exporters: [otlp]
+```
 
 ## Example Screenshot
 
@@ -130,5 +152,6 @@ service:
 [2]: https://www.jaegertracing.io/
 [3]: https://docs.honeycomb.io/getting-data-in/opentelemetry/
 [4]: https://docs.honeycomb.io/getting-data-in/opentelemetry/otel-collector/
+[5]: https://docs.lightstep.com/docs/already-using-collectors
 
 
