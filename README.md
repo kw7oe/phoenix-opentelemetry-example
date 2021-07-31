@@ -74,12 +74,18 @@ the following configuration in `config/runtime.exs`:
 ```elixir
 config :opentelemetry, :processors,
   otel_batch_processor: %{
-    exporter: {:opentelemetry_exporter, %{endpoints: [
-      {:http, 'api.honeycomb.io', 443 , [
-        {"x-honeycomb-team", System.fetch_env!("HONEYCOMB_API_KEY")},
+    exporter: {:opentelemetry_exporter, %{
+      endpoints: [
+        {:https, 'api.honeycomb.io', 443 , [
+        ]}
+      ],
+      headers: [
+        # For more secure approach, consider using environment variable:
+        #   {"x-honeycomb-team", System.fetch_env!("HONEYCOMB_API_KEY")}
+        {"x-honeycomb-team","<YOUR_API_KEY>"},
         {"x-honeycomb-dataset", "<YOUR_DATASET_NAME>"}
-      ]}
-    ]}}
+      ]
+    }}
   }
 ```
 
