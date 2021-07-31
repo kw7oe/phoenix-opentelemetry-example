@@ -10,6 +10,16 @@ processors:
     send_batch_size: 1024
     timeout: 5s
 exporters:
+  otlp:
+    # Uncomment below for using Honeycomb
+    # endpoint: "api.honeycomb.io:443"
+    # headers:
+    #   "x-honeycomb-team": "<YOUR_ACCESS_TOKEN>"
+    #   "x-honeycomb-dataset": "<YOUR_DATASET_NAME>"
+    # Uncomment below for using Lightstep
+    # endpoint: ingest.lightstep.com:443
+    # headers:
+    #   "lightstep-access-token": "<YOUR_ACCESS_TOKEN>"
   zipkin:
     endpoint: "http://zipkin:9411/api/v2/spans"
   jaeger:
@@ -24,5 +34,8 @@ service:
       receivers: [otlp]
       processors: [batch]
       exporters: [zipkin, jaeger]
+      # Add 'otlp' if you're exporting to Honeycomb
+      # or Lightstep
+      # exporters: [zipkin, jaeger, otlp]
 
 
