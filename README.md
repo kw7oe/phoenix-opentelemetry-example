@@ -40,7 +40,7 @@ look at the sample trace.
 #### Jaeger
 
 ![Jaeger Index](./images/jaeger_index.png)
-[Jaeger Traces](./images/jaeger_traces.png)
+![Jaeger Traces](./images/jaeger_traces.png)
 
 ## Exporting to other services
 
@@ -123,8 +123,8 @@ service:
 
 #### Screenshot
 
-[Honeycomb Index](./images/honeycomb_index.png)
-[Honeycomb Traces](./images/honeycomb_traces.png)
+![Honeycomb Index](./images/honeycomb_index.png)
+![Honeycomb Traces](./images/honeycomb_traces.png)
 
 ### Exporting to Lightstep
 
@@ -154,8 +154,8 @@ service:
 
 #### Screenshot
 
-[Lightstep Index](./images/lightstep_index.png)
-[Lightstep Traces](./images/lightstep_traces.png)
+![Lightstep Index](./images/lightstep_index.png)
+![Lightstep Traces](./images/lightstep_traces.png)
 
 
 [0]: https://github.com/open-telemetry/opentelemetry-collector/
