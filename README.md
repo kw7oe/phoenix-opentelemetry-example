@@ -30,6 +30,18 @@ Assuming you already have Docker and Docker Compose installed:
 look at the sample trace.
 6. Run `docker-compose down` to destroy the created resources.
 
+### Screenshot
+
+#### Zipkin
+
+![Zipkin Index](./images/zipkin_index.png)
+![Zipkin Traces](./images/zipkin_traces.png)
+
+#### Jaeger
+
+![Jaeger Index](./images/jaeger_index.png)
+[Jaeger Traces](./images/jaeger_traces.png)
+
 ## Exporting to other services
 
 In general, as long as the services support ingesting data from OTLP protocol,
@@ -61,11 +73,10 @@ NewRelic:
 So, search for the services documentation on whether they support OTLP protocol
 for their ingestion.
 
-### Example
+Here, we also include example configuration to export your telemetry data to Honeycomb
+and Lightstep.
 
-Here, we also include example configuration to export your telemetry data to Honeycomb and Lightstep.
-
-#### Exporting to Honeycomb
+### Exporting to Honeycomb
 
 As documented in [here][3], we can configure our `opentelemetry_exporter` to
 export our telemetry data directly to the Honeycomb OpenTelemetry endpoint with
@@ -110,7 +121,12 @@ service:
       exporters: [otlp]
 ```
 
-#### Exporting to Lightstep
+#### Screenshot
+
+[Honeycomb Index](./images/honeycomb_index.png)
+[Honeycomb Traces](./images/honeycomb_traces.png)
+
+### Exporting to Lightstep
 
 At the time of writing, Lightstep has no documentation on
 what are their OpenTelemetry ingestion endpoint. Hence unlike in Honeycomb,
@@ -136,21 +152,10 @@ service:
       exporters: [otlp]
 ```
 
-## Example Screenshot
+#### Screenshot
 
-### Zipkin
-
-![Zipkin Index](./images/zipkin_index.png)
-![Zipkin Traces](./images/zipkin_traces.png)
-
-### Jaeger
-
-![Jaeger Index](./images/jaeger_index.png)
-![Jaeger Traces](./images/zipkin_traces.png)
-
-### Honeycomb
-
-### Lightstep
+[Lightstep Index](./images/lightstep_index.png)
+[Lightstep Traces](./images/lightstep_traces.png)
 
 
 [0]: https://github.com/open-telemetry/opentelemetry-collector/
